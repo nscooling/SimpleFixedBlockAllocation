@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
 
-#include "allocator.h"
+#include "MyAlloc.h"
 
 #include <vector>
 using namespace std;
@@ -40,29 +40,30 @@ namespace
       // before the destructor).
     }
 
+    std::vector<int, MyAlloc<int>> v;
+        // an int/float map with special allocator
+    std::map<int,float,std::less<int>,
+             MyAlloc<std::pair<const int,float>>> m;
   };
 
   // ------------------------------------------------------------------------------
   // TESTS HERE
   //
 
-  TEST_F(Alloc_Test, initialCondition)
+  TEST_F(Alloc_Test, vectorInitialCondition)
   {
-    std:vector<int, Allocator<int>> v;
     ASSERT_EQ(0, v.size());
   }
 
-  TEST_F(Alloc_Test, initialAlloc)
+  TEST_F(Alloc_Test, vectorInitialAlloc)
   {
-    std:vector<int, Allocator<int>> v;
-    v.push_back(1);
+    v.push_back(int{});
     ASSERT_EQ(1, v.size());
   }
 
-  TEST_F(Alloc_Test, initialAllocValue)
+  TEST_F(Alloc_Test, VectorInitialAllocValue)
   {
-    std:vector<int, Allocator<int>> v;
-    v.push_back(42);
+    v.push_back(int{42});
     ASSERT_EQ(42, v[0]);
     ASSERT_EQ(42, v.at(0));
   }

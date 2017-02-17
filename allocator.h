@@ -19,40 +19,47 @@ public :
     };
 
 public : 
-    inline explicit Allocator() = default;
-    inline ~Allocator() = default;
-    inline explicit Allocator(Allocator const&) = default;
+    Allocator() = default;
+    ~Allocator() = default;
+    Allocator(Allocator const&) = default;
     template<typename U>
-    inline explicit Allocator(Allocator<U> const&) {}
+    Allocator(Allocator<U> const&) {}
 
     //    address
-    inline pointer address(reference r) { return &r; }
-    inline const_pointer address(const_reference r) { return &r; }
+    pointer address(reference r) { return &r; }
+    const_pointer address(const_reference r) { return &r; }
 
     //    memory allocation
-    inline pointer allocate(size_type cnt, 
-       typename std::allocator<void>::const_pointer = 0) 
+    pointer allocate(size_type num) 
     { 
-        void* mem = malloc(cnt * sizeof (T));
+        void* mem = malloc(num * sizeof (T));
         if(mem == nullptr) {
             throw std::bad_alloc{};
         }
-      return static_cast<pointer>(mem); 
+        return static_cast<pointer>(mem); 
     }
-    inline void deallocate(pointer p, size_type) 
+
+    void deallocate(pointer p, size_type) 
     { 
         free(p); 
     }
 
     //    size
-    inline size_type max_size() const { 
+    size_type max_size() const 
+    { 
         return std::numeric_limits<size_type>::max() / sizeof(T);
- }
+    }
 
     //    construction/destruction
-    inline void construct(pointer p, const T& t) { new(p) T(t); }
-    inline void destroy(pointer p) { p->~T(); }
+    void construct(pointer p, const T& t) 
+    { 
+        new(p) T(t); 
+    }
+    void destroy(pointer p) 
+    { 
+        p->~T(); 
+    }
 
-    inline bool operator==(Allocator const&) { return true; }
-    inline bool operator!=(Allocator const& a) { return !operator==(a); }
+    bool operator==(Allocator const&) { return true; }
+    bool operator!=(Allocator const& a) { return !operator==(a); }
 };    //    end of class Allocator
