@@ -1,21 +1,35 @@
-# Need these for a more recent CMake on Linux
 sudo: required
-dist: trusty
-
-os:
-  - linux
-  - osx
-
 language: cpp
 
-before_script:
-  - mkdir build
-  - cd build
-  - cmake ..
+compiler:  
+    - gcc
 
-script:
-  - cmake --build .
+before_install:
+  - sudo apt-get update -q
 
-after_script:
-  - cmake --build . --target test
 
+install:
+- if [ "$CXX" = "g++" ]; then export CXX="g++-4.9" CC="gcc-4.9"; fi
+- if [ "$CXX" = "clang++" ] && [ "$TRAVIS_OS_NAME" = "linux" ]; then export CXX="clang++" CC="clang"; fi
+- echo ${PATH}
+- echo ${CXX}
+- ${CXX} --version
+- ${CXX} -v
+
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - gcc-4.9
+    - g++-4.9
+    - clang
+
+before_script:  
+    - mkdir build
+    - cd build
+    - cmake ..
+
+script: 
+    - make
+    - make test  
