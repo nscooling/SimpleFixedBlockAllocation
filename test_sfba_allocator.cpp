@@ -1,28 +1,30 @@
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
 
-#include "MyAlloc.h"
-#include "allocator.h"
+#include "sfba_Alloc.h"
+#include "sfba.h"
 
-#include <list>
 #include <vector>
 using namespace std;
+
+static constexpr uint32_t heap_size = 16;
+using elem_ty = int;
 
 namespace
 {
   // The fixture for testing class Foo.
-  class Alloc_Test : public ::testing::Test
+  class SFBA_Alloc_Test : public ::testing::Test
   {
   protected:
     // You can remove any or all of the following functions if its body
     // is empty.
 
-    Alloc_Test() 
+    SFBA_Alloc_Test() 
     {
       // You can do set-up work for each test here.
     }
 
-    virtual ~Alloc_Test()
+    virtual ~SFBA_Alloc_Test()
     {
       // You can do clean-up work that doesn't throw exceptions here.
     }
@@ -42,35 +44,43 @@ namespace
       // before the destructor).
     }
 
-    std::vector<int, Allocator<int>> v;
-        // an int/float map with special allocator
-    // std::map<int,float,std::less<int>,
-    //          MyAlloc<std::pair<const int,float>>> m;
+    std::vector<int, SFBAllocator<int>> v;
+
   };
 
   // ------------------------------------------------------------------------------
   // TESTS HERE
   //
 
-  TEST_F(Alloc_Test, vectorInitialCondition)
+  TEST_F(SFBA_Alloc_Test, vectorInitialCondition)
   {
     ASSERT_EQ(0, v.size());
   }
 
-  TEST_F(Alloc_Test, vectorInitialAlloc)
+  TEST_F(SFBA_Alloc_Test, vectorInitialAlloc)
   {
     v.push_back(int{});
     ASSERT_EQ(1, v.size());
   }
 
-  TEST_F(Alloc_Test, VectorInitialAllocValue)
+  TEST_F(SFBA_Alloc_Test, VectorInitialAllocValue)
   {
-    v.push_back(int{42});    
-    v.push_back(int{42});    
     v.push_back(int{42});
-    v.push_back(int{42});    
-    v.push_back(int{42});    
-    v.push_back(int{42});
+    ASSERT_EQ(42, v[0]);
     ASSERT_EQ(42, v.front());
+  }
+
+  TEST_F(SFBA_Alloc_Test, multiple_Alloc)
+  {
+    v.push_back(int{42});
+    v.push_back(int{43});
+    v.push_back(int{44});
+    v.push_back(int{45});
+    ASSERT_EQ(42, v[0]);
+    ASSERT_EQ(43, v[1]);
+    ASSERT_EQ(44, v[2]);
+    ASSERT_EQ(45, v[3]);
+    ASSERT_EQ(42, v.front());
+    ASSERT_EQ(4, v.size());
   }
 }
