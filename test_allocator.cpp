@@ -73,4 +73,11 @@ namespace
     v.push_back(int{42});
     ASSERT_EQ(42, v.front());
   }
+
+  TEST_F(Vector_Alloc_Test, throwBadAlloc)
+  {
+    for(int cnt; cnt < 200; ++cnt) {
+          v.push_back(int{cnt});
+    }
+  }
 }

@@ -83,4 +83,12 @@ namespace
     ASSERT_EQ(42, v.front());
     ASSERT_EQ(4, v.size());
   }
+
+  TEST_F(SFBA_Alloc_Test, throwBadAlloc)
+  {
+    for(int cnt = 0; cnt < 16; ++cnt) {
+          v.push_back(int{cnt});
+    }
+    ASSERT_THROW(v.push_back(int{}), std::bad_alloc);
+  }
 }

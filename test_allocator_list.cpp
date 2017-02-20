@@ -48,26 +48,15 @@ namespace
   // TESTS HERE
   //
 
-  TEST_F(List_Alloc_Test, vectorInitialCondition)
+  TEST_F(List_Alloc_Test, initialCondition)
   {
     ASSERT_EQ(0, v.size());
   }
 
-  TEST_F(List_Alloc_Test, vectorInitialAlloc)
+  TEST_F(List_Alloc_Test, initialAlloc)
   {
     v.push_back(int{});
     ASSERT_EQ(1, v.size());
-  }
-
-  TEST_F(List_Alloc_Test, VectorInitialAllocValue)
-  {
-    v.push_back(int{42});    
-    v.push_back(int{43});    
-    v.push_back(int{44});
-    v.push_back(int{45});    
-    v.push_back(int{46});    
-    v.push_back(int{47});
-    ASSERT_EQ(42, v.front());
   }
 
   TEST_F(List_Alloc_Test, listRange)
@@ -84,7 +73,7 @@ namespace
     }
   }
 
-  TEST_F(List_Alloc_Test, listPop)
+  TEST_F(List_Alloc_Test, listPopAll)
   {
     v.push_back(int{42});    
     v.push_back(int{43});    
@@ -93,8 +82,26 @@ namespace
     v.push_back(int{46});    
     v.push_back(int{47});
 
+    ASSERT_EQ(42, v.front());
     v.pop_front();
-
     ASSERT_EQ(43, v.front());
+    v.pop_front();
+    ASSERT_EQ(44, v.front());
+    v.pop_front();
+    ASSERT_EQ(45, v.front());    
+    v.pop_front();
+    ASSERT_EQ(46, v.front());
+    v.pop_front();
+    ASSERT_EQ(47, v.front());
+    v.pop_front();
+    ASSERT_EQ(true, v.empty());
+  }
+
+  TEST_F(List_Alloc_Test, throwBadAlloc)
+  {
+    for(unsigned cnt = 0; cnt < 32; ++cnt) {
+          v.push_back(int{});
+    }
+    ASSERT_THROW(v.push_back(int{}), std::bad_alloc);
   }
 }
