@@ -32,6 +32,9 @@ public :
     //    memory allocation
     pointer allocate(size_type num) 
     { 
+#ifdef DEBUG
+        std::cout << "alloc =================> " << num << std::endl;
+#endif
         void* mem = malloc(num * sizeof (T));
         if(mem == nullptr) {
             throw std::bad_alloc{};
@@ -39,8 +42,11 @@ public :
         return static_cast<pointer>(mem); 
     }
 
-    void deallocate(pointer p, size_type) 
+    void deallocate(pointer p, size_type num) 
     { 
+#ifdef DEBUG
+        std::cout << "dealloc =================> " << num << std::endl;
+#endif
         free(p); 
     }
 
